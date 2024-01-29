@@ -1,0 +1,39 @@
+Desarrollo de una base de Datos donde registre los partidos de jugadores de futboll 
+
+------>Codigo final<------
+
+SELECT
+jugadores.id_jugador,
+jugadores.nombres,
+floor(datediff(CURRENT_DATE, jugadores.fecha_nac)/365) AS edad,
+jugadores.ciudad,
+jugadores.pais,
+equipos.nombre AS equipo,
+(SELECT SUM(estadistica.goles)
+FROM estadistica
+WHERE estadistica.id_jugador = jugadores.id_jugador
+) AS goles,
+(SELECT SUM(estadistica.faltas)
+FROM estadistica
+WHERE estadistica.id_jugador = jugadores.id_jugador
+) AS faltas,
+(SELECT COUNT(apariciones.id_partido)
+FROM apariciones
+WHERE apariciones.id_jugador = jugadores.id_jugador
+) AS apariciones,
+(SELECT marcas.nombre
+FROM marcas
+WHERE marcas.id_marca = publicidad.id_marca
+) AS marca,
+(SELECT publicidad.valor
+FROM publicidad
+WHERE publicidad.id_jugador = jugadores.id_jugador
+) AS publicidad_valor,
+(SELECT pagos.valor    
+FROM pagos
+WHERE pagos.id_jugador = jugadores.id_jugador
+) AS t_contrato
+FROM `jugadores`
+INNER JOIN publicidad ON publicidad.id_jugador = jugadores.id_jugador
+INNER JOIN equipos ON equipos.id_equipos = jugadores.id_equipo
+GROUP BY jugadores.id_jugador;
